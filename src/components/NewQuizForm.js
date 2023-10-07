@@ -1,18 +1,16 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import ROUTES from "../app/routes";
-import { useSelector, useDispatch } from "react-redux";
-import { selectTopics } from "../features/topics/topicsSlice";
-import { addQuizConnectTopic } from "../features/quizzes/quizzesSlice";
-import { addCard } from "../features/cards/cardsSlice";
+// import selectors
 
 export default function NewQuizForm() {
   const [name, setName] = useState("");
   const [cards, setCards] = useState([]);
   const [topicId, setTopicId] = useState("");
-  const history = useHistory();
-  const topics = useSelector(selectTopics);
+  const navigate = useNavigate();
+  const topics = {};  // Replace with topics 
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
@@ -22,28 +20,15 @@ export default function NewQuizForm() {
     }
 
     const cardIds = [];
-   
-    // create the new cards here and add each card's id to cardIds
-    cards.forEach((card, index) => {
-      const id = uuidv4()
-      cardIds.push(id);
-      const { front, back } = card;
-      dispatch(addCard({
-        id,
-        front,
-        back
-      }))
-    })
-    // create the new quiz here
-    const quizId = uuidv4();
-    dispatch(addQuizConnectTopic({
-      cardIds,
-      id: quizId, 
-      topicId,
-      name
-    }))
 
-    history.push(ROUTES.quizzesRoute());
+    // create the new cards here and add each card's id to cardIds
+    // create the new quiz here
+
+    const quizId = uuidv4();
+
+    // dispatch add quiz action 
+
+    navigate(ROUTES.quizzesRoute())
   };
 
   const addCardInputs = (e) => {
@@ -71,13 +56,11 @@ export default function NewQuizForm() {
           value={name}
           onChange={(e) => setName(e.currentTarget.value)}
           placeholder="Quiz Title"
-          required
         />
         <select
           id="quiz-topic"
           onChange={(e) => setTopicId(e.currentTarget.value)}
           placeholder="Topic"
-          required
         >
           <option value="">Topic</option>
           {Object.values(topics).map((topic) => (
@@ -116,7 +99,7 @@ export default function NewQuizForm() {
         ))}
         <div className="actions-container">
           <button onClick={addCardInputs}>Add a Card</button>
-          <button>Create Quiz</button>
+          <button type="submit">Create Quiz</button>
         </div>
       </form>
     </section>

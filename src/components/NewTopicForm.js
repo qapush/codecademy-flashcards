@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import ROUTES from "../app/routes";
 import { ALL_ICONS } from "../data/icons";
-import { addTopic } from "../features/topics/topicsSlice";
-import { useDispatch } from "react-redux";
+// import addTopic
 
 export default function NewTopicForm() {
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [icon, setIcon] = useState("");
-  const history = useHistory();
-  const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -18,14 +18,8 @@ export default function NewTopicForm() {
       return;
     }
 
-    // dispatch your add topic action here
-    const id = uuidv4();
-    dispatch(addTopic({ 
-      id, 
-      name,
-      icon
-    }))
-    history.push(ROUTES.topicsRoute());
+    // dispatch new topic
+    navigate(ROUTES.topicsRoute());
   };
 
   return (
@@ -55,7 +49,7 @@ export default function NewTopicForm() {
             ))}
           </select>
         </div>
-        <button className="center">Add Topic</button>
+        <button className="center" type="submit">Add Topic</button>
       </form>
     </section>
   );
